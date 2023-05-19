@@ -5,7 +5,8 @@ from sklearn.metrics.pairwise import cosine_similarity
 
 def recommend(game):
     game_index = name[name['game_name'] == game].index[0]
-    index = similarity[game_index].argsort()[-2:-7:-1]
+    similarity = cosine_similarity(np.array(df_preprocessed.iloc[game_index]).reshape(1, -1), df_preprocessed)
+    index = similarity[0].argsort()[-2:-7:-1]
     return name.loc[index,'game_name'].values,name.loc[index,'url'].values,name.loc[index,'img_url'].values
 
 
@@ -20,7 +21,6 @@ selected_game = st.selectbox(
 )
 
 if st.button('Show Recommendation'):
-    similarity = cosine_similarity(df_preprocessed, df_preprocessed)
     recommended_game_names,recommended_game_url,recommended_game_posters = recommend(selected_game)
     col1, col2, col3, col4, col5 = st.columns(5)
     with col1:
